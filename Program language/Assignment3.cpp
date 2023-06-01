@@ -233,11 +233,11 @@ int lex() {
 		lookup(nextChar);
 		getChar();
 		//비교연산자를 만들기 위함
-		while (charClass == UNKNOWN &&(nextToken == ASSIGN_OP || nextToken == NOT || nextToken == RIG || nextToken == LEF)) {
+		while (charClass == UNKNOWN && (nextToken == ASSIGN_OP || nextToken == NOT || nextToken == RIG || nextToken == LEF)) {
 			addChar();
 			getChar();
 		}
-		
+
 
 		break;
 		//EOF
@@ -400,105 +400,108 @@ void statement() {
 	//while 문
 	//비교연산자 기준으로 왼쪽 오른쪽이 한자리인 경우만 가능하게 구현
 	else if (nextToken == LOOP) {
+		size_t flag = i;
+		size_t finflag;
 		lex();
-		if (nextToken == RIGHT_PAREN) {
-			lex();
-			//lvalue가 숫자인경우는 0, 문자인 경우는 1
-			//while문의 조건문을 저장해두기 위한 변수들이다. 
-			int leftstatus;
-			int leftNum = 0;
-			string leftB(lexeme);
-			if (nextToken == INT_LIT) {
-				leftstatus = 0;
-			}
-			else {
-				leftstatus = 1;
-			}
-			//bexpr() 부분 
-			aexpr();
-			int result1 = operand.back();
-			while (!operand.empty()) {
-				operand.pop_back();
-			}
-			if (nextToken == RELOP) {
-				string lexemeStr(lexeme);
+		cout << flag << "\n";
+		while (true) {
+			//while의 조건식이 true일 경우 
+			if (nextToken == RIGHT_PAREN) {
 				lex();
-				int rightstatus;
-				int rightNum = 0;
-				string rightB(lexeme);
+				//lvalue가 숫자인경우는 0, 문자인 경우는 1
+				//while문의 조건문을 저장해두기 위한 변수들이다. 
+				int leftstatus;
+				int leftNum = 0;
+				string leftB(lexeme);
 				if (nextToken == INT_LIT) {
-					rightstatus = 0;
+					leftstatus = 0;
 				}
 				else {
-					rightstatus = 1;
+					leftstatus = 1;
 				}
+				//bexpr() 부분 
 				aexpr();
-				int result2 = operand.back();
+				int result1 = operand.back();
 				while (!operand.empty()) {
 					operand.pop_back();
 				}
-				bool test = bexpr1(result1, result2, lexemeStr);
-				if (nextToken == LEFT_PAREN) {
+				if (nextToken == RELOP) {
+					string lexemeStr(lexeme);
 					lex();
-					if (nextToken == RIGHT_BPAREN) {
-						//while조건문 처리해줘야함
-						//bexpr1의 값이 true라면 while문 돌기
-						while (test) {
-							while (nextToken != LEFT_BPAREN && nextToken != EOF && nextToken != ERROR) {
-								lex();
-								statement();
-							}
-							nextToken = RIGHT_BPAREN;
-							//while 조건문을 처리해주기 위한 부분
-							int left;
-							int right;
-							if (leftstatus == 0) {
-								left = stoi(leftB);
-							}
-							else {
-								left = var[leftB];
-							}
-							if (rightstatus == 0) {
-								right = stoi(rightB);
-							}
-							else {
-								right = var[rightB];
-							}
-							test = bexpr1(left, right, lexemeStr);
-						}
-						if (nextToken == LEFT_BPAREN) {
+					int rightstatus;
+					int rightNum = 0;
+					string rightB(lexeme);
+					if (nextToken == INT_LIT) {
+						rightstatus = 0;
+					}
+					else {
+						rightstatus = 1;
+					}
+					aexpr();
+					int result2 = operand.back();
+					while (!operand.empty()) {
+						operand.pop_back();
+					}
+					bool test = bexpr1(result1, result2, lexemeStr);
+					//while의 조건식이 참인경우 그대로 진행 
+					if (test == true) {
+						if (nextToken == LEFT_PAREN) {
+							lex();
+							if (nextToken == RIGHT_BPAREN) {
+								//while조건문 처리해줘야함
+								//bexpr1의 값이 true라면 while문 돌기
+								while (nextToken != LEFT_BPAREN && nextToken != EOF && nextToken != ERROR) {
+									lex();
+									statement();
+								}
 
+								if (nextToken == LEFT_BPAREN) {
+									//syntax적 에러가 없을 떄 while문 처음으로 돌아가게 한다. 
+									finflag = i;
+									i = flag;
+									nextToken = RIGHT_PAREN;
+								}
+								//}빠진 경우 
+								else {
+									iserror = true;
+									nextToken = ERROR;
+								}
+							}
+							//{ 빠진 경우
+							else {
+								iserror = true;
+								nextToken = ERROR;
+							}
 						}
-						//}빠진 경우 
+						// ) 빠진 경우 
 						else {
 							iserror = true;
 							nextToken = ERROR;
 						}
+
 					}
-					//{ 빠진 경우
+					//조건식이 거짓인경우 
 					else {
-						iserror = true;
-						nextToken = ERROR;
+						break;
 					}
+
 				}
-				// ) 빠진 경우 
+				// 비교연산자가 오지 않은 경우
 				else {
 					iserror = true;
 					nextToken = ERROR;
+					break;
 				}
 			}
-			// 비교연산자가 오지 않은 경우
+			//{ 이 오지 않은 경우 
 			else {
 				iserror = true;
 				nextToken = ERROR;
+				break;
 			}
-			//bexpr의 값이 true일 때만 while문 진행
-
 		}
-		else {
-			iserror = true;
-			nextToken = ERROR;
-		}
+		i = finflag;
+		lex();
 	}
 	cout << "Exit Statement" << "\n";
 }
