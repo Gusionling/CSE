@@ -231,8 +231,14 @@ int lex() {
 		/* Parentheses and operators */
 	case UNKNOWN:
 		lookup(nextChar);
+		cout << "lexeme: " << lexeme << "nextChar: " << nextChar << "nextToken: " << nextToken << "charClass: " << charClass << "\n";
 		getChar();
-		//cout << "lexeme: " << lexeme << "nextChar: " << nextChar << "nextToken: " << nextToken << "\n";
+		cout << "lexeme: " << lexeme << "nextChar: " << nextChar << "nextToken: " << nextToken << "charClass: " << charClass << "\n";
+		while (isspace(nextChar)) {
+			getChar();
+		}
+		cout << "lexeme: " << lexeme << "nextChar: " << nextChar << "nextToken: " << nextToken << "charClass: " << charClass << "\n";
+
 		//비교연산자를 만들기 위함
 		while (charClass == UNKNOWN && (nextToken == ASSIGN_OP || nextToken == NOT || nextToken == RIG || nextToken == LEF)) {
 			addChar();
@@ -432,7 +438,7 @@ void statement() {
 				}
 				//bexpr() 부분 
 				aexpr();
-				//cout << "lexeme: " << lexeme << "nextChar: " << nextChar <<"nextToken: " << nextToken <<"\n";
+				cout << "lexeme: " << lexeme << "nextChar: " << nextChar << "nextToken: " << nextToken << "\n";
 				int result1 = operand.back();
 				while (!operand.empty()) {
 					operand.pop_back();
