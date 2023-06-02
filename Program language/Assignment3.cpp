@@ -232,6 +232,7 @@ int lex() {
 	case UNKNOWN:
 		lookup(nextChar);
 		getChar();
+		//cout << "lexeme: " << lexeme << "nextChar: " << nextChar << "nextToken: " << nextToken << "\n";
 		//비교연산자를 만들기 위함
 		while (charClass == UNKNOWN && (nextToken == ASSIGN_OP || nextToken == NOT || nextToken == RIG || nextToken == LEF)) {
 			addChar();
@@ -401,11 +402,18 @@ void statement() {
 	//비교연산자 기준으로 왼쪽 오른쪽이 한자리인 경우만 가능하게 구현
 	else if (nextToken == LOOP) {
 		size_t flag = i;
+		//while문이 나왔을 때 처리
+		size_t finflag = 1;
+		//while이 몇번 돌았는지
+		// 처음부터 while의 조건문이 false인 경우를 대비
+		int count = 0;
 		//while문이 나오고 다시 돌아갈 때 nextChar까지 설정해줘야함
 		char store = nextChar;
+		int nextClass = charClass;
+		//while문이 나왔을 때 nextChar기억
+		char finstore = nextChar;
 		cout << flag << "\n";
 		while (true) {
-			cout << "nextchar: " << nextChar << "\n";
 			lex();
 			//while의 조건식이 true일 경우 
 			cout << "while들어갈 때 lexeme: " << lexeme << " nextToken: " << nextToken << "i는" << i << "\n";
@@ -424,7 +432,7 @@ void statement() {
 				}
 				//bexpr() 부분 
 				aexpr();
-				//여기서 에러가 난다. 
+				//cout << "lexeme: " << lexeme << "nextChar: " << nextChar <<"nextToken: " << nextToken <<"\n";
 				int result1 = operand.back();
 				while (!operand.empty()) {
 					operand.pop_back();
@@ -461,10 +469,12 @@ void statement() {
 
 								if (nextToken == LEFT_BPAREN) {
 									//syntax적 에러가 없을 떄 while문 처음으로 돌아가게 한다. 
-
+									finflag = i;
+									finstore = nextChar;
 									i = flag;
 									nextChar = store;
-									cout << "nextToken: " << nextToken << " nextChar: " << nextChar << "\n";
+									charClass = UNKNOWN;
+									cout << "nextToken: " << nextToken << " nextChar: " << nextChar << "charClass: " << charClass << "\n";
 
 								}
 								//}빠진 경우 
@@ -488,6 +498,9 @@ void statement() {
 					}
 					//조건식이 거짓인경우 
 					else {
+						i = finflag - 1;
+						getChar();
+						cout << "nextToken: " << nextToken << " nextChar: " << nextChar << "charClass: " << charClass << "\n";
 						break;
 					}
 
@@ -507,6 +520,8 @@ void statement() {
 			}
 		}
 		lex();
+		cout << "nextToken: " << nextToken << " nextChar: " << nextChar << "charClass: " << charClass << "\n";
+
 	}
 	cout << "Exit Statement" << "\n";
 }
@@ -638,6 +653,7 @@ int main() {
 	while (Enter < 2) {
 		cout << ">> ";
 		getline(cin, str);
+
 		if (str == "") {
 			Enter++;
 		}
