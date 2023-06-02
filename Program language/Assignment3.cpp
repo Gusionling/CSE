@@ -401,8 +401,11 @@ void statement() {
 	//비교연산자 기준으로 왼쪽 오른쪽이 한자리인 경우만 가능하게 구현
 	else if (nextToken == LOOP) {
 		size_t flag = i;
+		//while문이 나오고 다시 돌아갈 때 nextChar까지 설정해줘야함
+		char store = nextChar;
 		cout << flag << "\n";
 		while (true) {
+			cout << "nextchar: " << nextChar << "\n";
 			lex();
 			//while의 조건식이 true일 경우 
 			cout << "while들어갈 때 lexeme: " << lexeme << " nextToken: " << nextToken << "i는" << i << "\n";
@@ -458,9 +461,10 @@ void statement() {
 
 								if (nextToken == LEFT_BPAREN) {
 									//syntax적 에러가 없을 떄 while문 처음으로 돌아가게 한다. 
-									i = flag;
 
-									nextToken = RIGHT_PAREN;
+									i = flag;
+									nextChar = store;
+									cout << "nextToken: " << nextToken << " nextChar: " << nextChar << "\n";
 
 								}
 								//}빠진 경우 
