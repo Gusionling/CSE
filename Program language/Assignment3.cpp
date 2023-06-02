@@ -401,11 +401,11 @@ void statement() {
 	//비교연산자 기준으로 왼쪽 오른쪽이 한자리인 경우만 가능하게 구현
 	else if (nextToken == LOOP) {
 		size_t flag = i;
-		size_t finflag;
-		lex();
 		cout << flag << "\n";
 		while (true) {
+			lex();
 			//while의 조건식이 true일 경우 
+			cout << "while들어갈 때 lexeme: " << lexeme << " nextToken: " << nextToken << "i는" << i << "\n";
 			if (nextToken == RIGHT_PAREN) {
 				lex();
 				//lvalue가 숫자인경우는 0, 문자인 경우는 1
@@ -421,6 +421,7 @@ void statement() {
 				}
 				//bexpr() 부분 
 				aexpr();
+				//여기서 에러가 난다. 
 				int result1 = operand.back();
 				while (!operand.empty()) {
 					operand.pop_back();
@@ -457,9 +458,10 @@ void statement() {
 
 								if (nextToken == LEFT_BPAREN) {
 									//syntax적 에러가 없을 떄 while문 처음으로 돌아가게 한다. 
-									finflag = i;
 									i = flag;
+
 									nextToken = RIGHT_PAREN;
+
 								}
 								//}빠진 경우 
 								else {
@@ -500,7 +502,6 @@ void statement() {
 				break;
 			}
 		}
-		i = finflag;
 		lex();
 	}
 	cout << "Exit Statement" << "\n";
