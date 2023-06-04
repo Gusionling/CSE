@@ -1,10 +1,11 @@
 #include <iostream>
+#include <cstddef>
 #include <string>
 #include <cstring>
 #include <vector>
 #include <cmath>
 #include <sstream>
-#include <unordered_map>
+#include <map>
 
 using namespace std;
 
@@ -30,7 +31,7 @@ vector<string> op;
 vector<int> operand;
 
 //변수를 저장할 자료구조
-unordered_map<string, int> var;
+map<string, int> var;
 
 /* Character classes */
 #define DIGIT 1
@@ -231,14 +232,10 @@ int lex() {
 		/* Parentheses and operators */
 	case UNKNOWN:
 		lookup(nextChar);
-		cout << "lexeme: " << lexeme << "nextChar: " << nextChar << "nextToken: " << nextToken << "charClass: " << charClass << "\n";
 		getChar();
-		cout << "lexeme: " << lexeme << "nextChar: " << nextChar << "nextToken: " << nextToken << "charClass: " << charClass << "\n";
 		while (isspace(nextChar)) {
 			getChar();
 		}
-		cout << "lexeme: " << lexeme << "nextChar: " << nextChar << "nextToken: " << nextToken << "charClass: " << charClass << "\n";
-
 		//비교연산자를 만들기 위함
 		while (charClass == UNKNOWN && (nextToken == ASSIGN_OP || nextToken == NOT || nextToken == RIG || nextToken == LEF)) {
 			addChar();
@@ -368,8 +365,13 @@ void statement() {
 					operand.pop_back();
 				}
 				show();
+				lex();
+
 			}
-			lex();
+			else {
+				iserror = true;
+				nextToken = EOF;
+			}
 		}
 		//한글자 변수일 때 
 		else {
@@ -468,8 +470,8 @@ void statement() {
 							if (nextToken == RIGHT_BPAREN) {
 								//while조건문 처리해줘야함
 								//bexpr1의 값이 true라면 while문 돌기
+								lex();
 								while (nextToken != LEFT_BPAREN && nextToken != EOF && nextToken != ERROR) {
-									lex();
 									statement();
 								}
 
@@ -479,6 +481,7 @@ void statement() {
 									finstore = nextChar;
 									i = flag;
 									nextChar = store;
+									count++;
 									charClass = UNKNOWN;
 									cout << "nextToken: " << nextToken << " nextChar: " << nextChar << "charClass: " << charClass << "\n";
 
@@ -504,10 +507,16 @@ void statement() {
 					}
 					//조건식이 거짓인경우 
 					else {
+						if (count == 0) {
+							while (nextToken == LEFT_BPAREN || nextToken == EOF || nextToken == ERROR) {
+								lex();
+							}
+						}
 						i = finflag - 1;
 						getChar();
 						cout << "nextToken: " << nextToken << " nextChar: " << nextChar << "charClass: " << charClass << "\n";
 						break;
+						count = 0;
 					}
 
 				}
@@ -610,7 +619,10 @@ void aexpr() {
 void term() {
 	cout << "Enter term" << "\n";
 	if (nextToken == INT_LIT) {
-		int k = stoi(lexeme);
+		stringstream ss;
+		int k;
+		ss << lexeme;
+		ss >> k;
 		operand.push_back(k);
 		lex();
 	}
@@ -659,7 +671,6 @@ int main() {
 	while (Enter < 2) {
 		cout << ">> ";
 		getline(cin, str);
-
 		if (str == "") {
 			Enter++;
 		}
