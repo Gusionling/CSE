@@ -1,0 +1,6 @@
+127.0.0.1 - - [03/Nov/2023:15:00:50 +0900] "GET / HTTP/1.1" 404 807
+0:0:0:0:0:0:0:1 - - [03/Nov/2023:15:00:52 +0900] "GET /WebMarket/addProduct.jsp HTTP/1.1" 200 3061
+0:0:0:0:0:0:0:1 - - [03/Nov/2023:15:00:52 +0900] "GET /WebMarket/resources/js/validation.js HTTP/1.1" 200 1472
+0:0:0:0:0:0:0:1 - - [03/Nov/2023:15:00:52 +0900] "GET /favicon.ico HTTP/1.1" 404 818
+0:0:0:0:0:0:0:1 - - [03/Nov/2023:15:03:33 +0900] "GET /WebMarket/addProduct.jsp HTTP/1.1" 200 3082
+0:0:0:0:0:0:0:1 - - [03/Nov/2023:15:03:33 +0900] "GET /WebMarket/resources/js/validation.js HTTP/1.1" 304 -

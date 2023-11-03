@@ -1,0 +1,4 @@
+127.0.0.1 - - [13/Oct/2023:15:30:54 +0900] "GET / HTTP/1.1" 404 807
+0:0:0:0:0:0:0:1 - - [13/Oct/2023:15:30:57 +0900] "GET /JSPBook/ch08/validation01.jsp HTTP/1.1" 200 504
+0:0:0:0:0:0:0:1 - - [13/Oct/2023:15:30:57 +0900] "GET /favicon.ico HTTP/1.1" 404 818
+0:0:0:0:0:0:0:1 - - [13/Oct/2023:15:31:02 +0900] "GET /JSPBook/ch08/validation01.jsp?id=isdnhk&passwd=1234 HTTP/1.1" 200 504
