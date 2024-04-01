@@ -1,0 +1,128 @@
+!SESSION 2023-11-03 16:21:44.982 -----------------------------------------------
+eclipse.buildId=4.28.0.20230608-1200
+java.version=17.0.7
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.emf.ecore 2 0 2023-11-03 16:21:46.062
+!MESSAGE Both 'org.eclipse.jst.j2ee.core' and 'org.eclipse.jst.j2ee.core' register a package for 'application.xmi'
+
+!ENTRY org.eclipse.jface 2 0 2023-11-03 16:21:51.672
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2023-11-03 16:21:51.672
+!MESSAGE A conflict occurred for CTRL+SHIFT+T:
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		WorkbenchHandlerServiceHandler("org.eclipse.jdt.ui.navigate.open.type"),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		WorkbenchHandlerServiceHandler("org.eclipse.lsp4e.symbolinworkspace"),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.egit.ui 2 0 2023-11-03 16:21:54.708
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\isdnh'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.core.jobs 4 2 2023-11-03 16:22:30.994
+!MESSAGE An internal error occurred during: "Loading descriptor for WebMarket.".
+!STACK 0
+org.eclipse.emf.ecore.resource.impl.ResourceSetImpl$1DiagnosticWrappedException: org.eclipse.emf.ecore.xmi.FeatureNotFoundException: Feature 'url-patter' not found. (platform:/resource/WebMarket/src/main/webapp/WEB-INF/web.xml, 9, 16)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.handleDemandLoadException(ResourceSetImpl.java:319)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoadHelper(ResourceSetImpl.java:278)
+	at org.eclipse.jem.internal.util.emf.workbench.ProjectResourceSetImpl.getResource(ProjectResourceSetImpl.java:1064)
+	at org.eclipse.jst.jee.model.internal.JEE5ModelProvider.getModelResource(JEE5ModelProvider.java:187)
+	at org.eclipse.jst.jee.model.internal.Web25ModelProvider.getModelObject(Web25ModelProvider.java:44)
+	at org.eclipse.jst.jee.model.internal.JEE5ModelProvider.getModelObject(JEE5ModelProvider.java:237)
+	at org.eclipse.jst.jee.model.internal.common.AbstractMergedModelProvider.loadProviders(AbstractMergedModelProvider.java:261)
+	at org.eclipse.jst.jee.model.internal.common.AbstractMergedModelProvider.access$2(AbstractMergedModelProvider.java:255)
+	at org.eclipse.jst.jee.model.internal.common.AbstractMergedModelProvider$LoadModelsWorkspaceRunnable.run(AbstractMergedModelProvider.java:278)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2382)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2407)
+	at org.eclipse.jst.jee.model.internal.common.AbstractMergedModelProvider.loadModel(AbstractMergedModelProvider.java:249)
+	at org.eclipse.jst.jee.model.internal.common.AbstractMergedModelProvider.getMergedModel(AbstractMergedModelProvider.java:219)
+	at org.eclipse.jst.jee.model.internal.common.AbstractMergedModelProvider.getModelObject(AbstractMergedModelProvider.java:139)
+	at org.eclipse.jst.jee.ui.internal.navigator.Web25ContentProvider.getNewContentProviderInstance(Web25ContentProvider.java:69)
+	at org.eclipse.jst.jee.ui.internal.navigator.LoadingJeeDDJob.run(LoadingJeeDDJob.java:50)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: org.eclipse.emf.ecore.xmi.FeatureNotFoundException: Feature 'url-patter' not found. (platform:/resource/WebMarket/src/main/webapp/WEB-INF/web.xml, 9, 16)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.reportUnknownFeature(XMLHandler.java:2045)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.handleUnknownFeature(XMLHandler.java:2009)
+	at org.eclipse.emf.ecore.xmi.impl.XMIHandler.handleUnknownFeature(XMIHandler.java:172)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.handleFeature(XMLHandler.java:1953)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.processElement(XMLHandler.java:1048)
+	at org.eclipse.emf.ecore.xmi.impl.XMIHandler.processElement(XMIHandler.java:82)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.startElement(XMLHandler.java:1026)
+	at org.eclipse.emf.ecore.xmi.impl.XMLHandler.startElement(XMLHandler.java:720)
+	at org.eclipse.emf.ecore.xmi.impl.XMIHandler.startElement(XMIHandler.java:190)
+	at java.xml/com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.startElement(AbstractSAXParser.java:518)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.scanStartElement(XMLNSDocumentScannerImpl.java:374)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(XMLDocumentFragmentScannerImpl.java:2726)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:605)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.next(XMLNSDocumentScannerImpl.java:112)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:542)
+	at java.xml/com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:889)
+	at java.xml/com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:825)
+	at java.xml/com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:141)
+	at java.xml/com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1224)
+	at java.xml/com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:637)
+	at java.xml/com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl.parse(SAXParserImpl.java:326)
+	at org.eclipse.emf.ecore.xmi.impl.XMLLoadImpl.load(XMLLoadImpl.java:175)
+	at org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl.doLoad(XMLResourceImpl.java:261)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1563)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1342)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoad(ResourceSetImpl.java:259)
+	at org.eclipse.jem.internal.util.emf.workbench.ProjectResourceSetImpl.demandLoad(ProjectResourceSetImpl.java:811)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoadHelper(ResourceSetImpl.java:274)
+	... 15 more
+!SESSION 2023-11-03 16:24:51.528 -----------------------------------------------
+eclipse.buildId=4.28.0.20230608-1200
+java.version=17.0.7
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ko_KR
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.emf.ecore 2 0 2023-11-03 16:24:52.476
+!MESSAGE Both 'org.eclipse.jst.j2ee.core' and 'org.eclipse.jst.j2ee.core' register a package for 'application.xmi'
+
+!ENTRY org.eclipse.jface 2 0 2023-11-03 16:25:18.876
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2023-11-03 16:25:18.876
+!MESSAGE A conflict occurred for CTRL+SHIFT+T:
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		WorkbenchHandlerServiceHandler("org.eclipse.jdt.ui.navigate.open.type"),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		WorkbenchHandlerServiceHandler("org.eclipse.lsp4e.symbolinworkspace"),
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.egit.ui 2 0 2023-11-03 16:25:21.620
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\isdnh'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
