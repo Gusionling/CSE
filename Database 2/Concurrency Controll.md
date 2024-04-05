@@ -173,8 +173,47 @@ ex) Delete하고 Read하게 되면 문제가 발생한다.
 	- 기존에 그 자원에 대해서 s-lock이 있으면 안된다~
 - insert도 x-lock이 필요하다 
 
-**phenomenon**현상
+**팬텀**현상
+- Insert나 delete 때문에 발생하는 현상이다. 
+- tuple level locking에서 발생 
+- lock을 걸 때 데이터의 단위가 reco
+
+–T1 : Read(Account[100], Account[200], Account[300])
+
+–T2 : insert(Account[400, Busan, 700])
+
+–T2 : read(Assets[Busan])  // returns 1500
+
+–T2 : write(Assets[Busan])    // writes 2200
+
+–T1 : read(Assets[Busan])   // returns 2200
+
+2phase locking 했는데 : lock 얻을 때 얻고 풀 때 쫙 푸는 
+그러면 위 결과가  < T1, T2 > 나 <T2, T1> 과 같아야한다. (complict serializable이기 때문에 ) 
+- < T1, T2 >이라면 read(Assets[Busan])가 1500이어야 하는데 consistency하지 않다. (2200)이 나온다. 
+- Insert 때문에 그런거다
+- T1은 T2가 insert한 걸 모른다. (Phantom)
+
+**tuple(record) 단위가 아니라 table(relation)단위로 쓰면 팬텀 현상이 생길까? (locking)을** 
+- 절대 안생김 (물론 당연히 2PL)
+- 위 같은 경우도 테이블을 읽으려 했는데 중간에 값을 넣어버려서 그런거다 그렇기 때문에 테이블에 locking을 걸어버리면 T1이 할 거 다 하고 준다 
+- T1이 처음에 Account()에 s-lock을 걸어버리기 때문에 T2가 insert를 하지 못함
+- concurrency가 떨어진다. 
+
+>새로운 방식이 필요하다!!
+
+#### Index 
+- 그냥 쓰면 concurrency가 떨어진다. (다 잡고 있을거니까)
 
 
+#### Crabbing 
+- root 노드부터 락을 건다. 
+- child 록을 잡고 부모 락을 푼다. (락을 잡고 풀고 잡고~~)
+- 부노 노드에 구조 변화가 필요하면 (split, merge) 부모 노드에 대한 락을 요청한다. (부모 노드를 업데이트 해야되기 때문이다.)
+- 단점 ; Deadlock이 발생할 수 있다. 
+	- ex) parent 노드를 업데이트를 해야될 상황
 
 
+# Transaction Isolation in SQL
+
+- 
