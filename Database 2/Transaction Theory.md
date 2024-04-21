@@ -64,11 +64,12 @@ concurrent하게 수행을 할 때 Serializability를 만족시키면 consistent
 **NonSerializable Execution** 
 트랜잭션을 올바르게 수행하지 못하는 경우 발생할 수 있는 현상들이다. 
 - dirty read : 완료되지 않은 값을 읽는 것이다. 완료되지 않은 값을 읽었으니까 완료되지 않은 값이 rollback되었을 때 얘를 읽는 애도 rollback되어야 한다. 
-- Lost update
-- unrepeatable read : 한 트랜잭션 사이에 같은 값을 읽었을 때 그 값은 같아야한다. 
+![[Pasted image 20240418114647.png]]
+- Lost update : T2가 쓴 값을 T1이 덮어써버리는 현상이다. 
+- unrepeatable read : 한 트랜잭션 사이에 같은 값을 읽었을 때 그 값은 같아야한다. 같지 않은 현상을 말한다. 
 
 **Schedules**
-- 동시적으로 수행되는 다수 트랜잭션에 속하는 연산이 수행된 시간적 순서를 의미한다. 
+- 동시적으로 수행되는 다수 트랜잭션에 속하는 연산이 수행된 **시간적 순서**를 의미한다. 
 - 동시적으로 수행된 트랜잭션의 모든 연산이 스케줄에 나와있어야한다. 
 - 스케줄에 있는 특정 트랜잭션에 속하는 연산 순서는 또한 해당 트랜잭션 내의 연산 순서와 동일 하여야한다. 
 
@@ -91,7 +92,7 @@ concurrent하게 수행을 할 때 Serializability를 만족시키면 consistent
 - 동일한 데이터에 대한 두 개 연산 중에서 최소한 ==한 개 연산이 쓰기 연산==이면, 두 개 연산은 충돌한다고 한다. (실행 순서를 바꾸면 결과가 다르게 나온)
 
 Conflict Serializable
-- 위치를 바꿀 수 있는 연산(비충돌 연산)들의 순서를 바꿔서 serial schedules 이 나오는 경우이다. 
+- 위치를 바꿀 수 있는 연산(비충돌 연산)들의 순서를 바꿔서 serial schedules 이 나오는 경우이다. (한가지라도 나오면 된다. )
 ![[Pasted image 20240312160055.png]]
 <T3, T4> 는 T3다음 T4가 와도 되는지 => 안된다. 
 
@@ -100,6 +101,7 @@ Conflict Serializable
 
 ![[Pasted image 20240312161351.png]]
 - Conflict Serializable하지는 않지만 view Serializable 하다. 
+	- view equivalent to <T5, T6, T7>
 - 스케줄 s에 속한 트랜잭션의 읽기 연산에 대하여 s' 스케줄에서도 동일한 값을 읽고 s의 마지막 쓰기 연산이 s'스케줄의 마지막 쓰기 연산과 동일하면 스케줄 s'은 뷰 직렬가능 스케줄이라고 한다. 
 - 얘네들은 이런 특징이 있다 : blind write(Read하지 않고 Write)
 - 뭔가....write(Q)끼리의 순서는 상관이 없어보인다. 해설지에서 <T5, T6, T7>의 T7쓰기 연산과 스케줄 8의 데이터 Q에 대한 마지막 쓰기이 동일하다고 하기 때문이다. 
@@ -107,6 +109,7 @@ Conflict Serializable
 ![[Pasted image 20240315141634.png]]
 - conflict serializable이 아닌건 뭐 바로 알거고
 - view serializable이 아닌 이유는 <T1, T2> , <T2, T1>을 해보았을 때 읽기 연산에 대해서 기존과 다른 값을 읽게 된다. 
+- 하지만 연산이 +와 -이기 때문에 순서를 바꾸어봐도 동일한 결과가 나온다. 
 
 ## How to Test Serializability
 
@@ -123,6 +126,10 @@ Conflict Serializable
 
 # Recoverability
 
+**Recoverable Schedules**
+•if a transaction Tj reads a data item previously written by a transaction Ti, then the commit operation of Ti appears before the commit operation of Tj
+- 쓰기한 트랜잭션이 그걸 읽은 트랜잭션보다 commit이 빠르면 된다. 
+
 **Cascading rollback**
 ![[Pasted image 20240319151135.png]]
 T10 을 commit하고 T11에서 A를 읽는 식으로 하면 Cascaing rollback을 방지할 수 있다. 
@@ -130,7 +137,17 @@ T10 을 commit하고 T11에서 A를 읽는 식으로 하면 Cascaing rollback을
 
 ![[Pasted image 20240319151344.png]]
 ACA는 W-R관계만 본다. ST는 W-W도 본다. 
+- RC : recoverable
+ - ACA : avoids cascading aborts
+ - ST : strict 
+	 - 제한적인(strict) 스케줄은 쓰기 연산을 한 트랜잭션이 (완료 또는 철회로) 종료될 때까지 해당 데이터를 다른 트랜잭션이 읽거나 쓸 수 없다.
+ - SR : conflict serializable
+
+![[Pasted image 20240418122502.png]]
+상기 스케줄에서 T2는 T1이 쓴 데이타(X)를 overwrite하지만, 이는 ACA 스케줄을 위반하는 것은 아니다.   ACA 스케줄은  읽기 연산에 대한 조건만 요구하고 있으며, 스케줄이 ACA 되기 위하여 만족하여야 하는 overwrite에 대한 제한은 전혀 없다.
+
+ST 스케줄은 읽기 및 쓰기에 대한 제약이 있으며, 상기 스케줄의 4번째 줄 쓰기 연산(즉, Write(X))은 ST의 요구사항을 위반하기 때문에 상기 스케줄은 ST가 아니다.
 
 ### Concurrency Control
-- Serializability 테스트하는 거슨 너무 오래걸려
+- Serializability 테스트하는 거는 너무 오래걸려
 - 그래서 등장한게 Concurrency Control protocols이다. 
