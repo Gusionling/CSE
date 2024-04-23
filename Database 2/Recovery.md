@@ -76,23 +76,25 @@
 #### (2) Logging
 - 정상처리 
 	- 로그는 로그 레코드에 저장되는데 단방향으로 쭉 저장이된다. 
-	- 로그 레코드는 Update가 있을 때 발생한다. 
+	- 로그 레코드는 Update가 있을 때 발생한다.
 	- <Ti, X, V1, V2> V1이 업데이트 전, V2가 업데이트 후
 - 동시성 문제 
-	- strict 2PL : cascading rollback을 방지하기 위함, committed read
+	- **strict 2PL** : cascading rollback을 방지하기 위함, committed read
 	- 로그 블록 하나 내에는 다수개의 트랜잭션 로그 레코드가 저장된다. (트랜잭션은 동시에 다수가 실행되므로)
+
+> 로그 레코드는 어느 시점에 저장이 되는지!
 
 #### (3) Logging : Checkpoint
 
 > why? (왜 필요한가) : system failure에 대해 원할하게 대응하기 위해서 (redo와 undo의 가이드라인 제시)
 
 - 디스크에 쓰여지기 전에 로그 레코드에 값을 저장해야한다. 
-- 검사점 연산 : main memory의 모든 로그 레코드와 변경된 데이터 페이지를 디스에 반영하여, 디스크에 저장되어 있는 데이터베이스 상태와 주기억장치에 저장되어 있는 데이터베이스 상태를 동일하게 하는 것이다. 
+- 검사점 연산 : main memory의 모든 로그 레코드와 변경된 데이터 페이지를 디스크에 반영하여, 디스크에 저장되어 있는 데이터베이스 상태와 주기억장치에 저장되어 있는 데이터베이스 상태를 동일하게 하는 것이다. 
 
 ![[Pasted image 20240417144055.png]]
 T1 : checkpoint 이전에 이미 모든 것이 끝났기 때문에 디스크에도 잘 반영이 된 상태이다. 건들 필요가 없다. 
 T2 , T3 : 버퍼에 commit까지 있을 것이다. 하지만 disk 에는 있을지 모른다. 
-(log record에 commit 이 반영되어 있으면 redo, 안되어 있으면 undo : 확실한지는 모르겠다....)
+(log record에 commit 이 반영되어 있으면 redo, 안되어 있으면 undo)
 T4 : 확실하게 commit이 안된 상태이므로 undo를 해주어야 한다. 
 
 #### (4) Logging : Recovery
@@ -106,10 +108,10 @@ T4 : 확실하게 commit이 안된 상태이므로 undo를 해주어야 한다.
 #### (1) 개요
 DB에 저장이 되어 있는 형태는 파일이다. 
 buffer는 왜 있는 것일까?
-버퍼로 가져와서 여러 트랜잭션이 사요할 수 있게 하기 위함이다. 
+버퍼로 가져와서 여러 트랜잭션이 사용할 수 있게 하기 위함이다. 
 **Buffer Manager** : buffer replacement나 allocation 같은 작업을 한다. 
 
-- buffer에서 교체하는 block이 수정사항이 있는 block이면 disk에 반영을 해준다. 
+- buffer에서 교체하는 block이 수정 사항이 있는 block이면 disk에 반영을 해준다. 
 - os가 block을 교체할 수도 있고 독립적으로 교체를 할 수도 있다. 
 
 #### (2) Buffer-Replacement 정책
@@ -131,11 +133,11 @@ buffer는 왜 있는 것일까?
 #### (3) Data Page Buffering
 - 이 데이터 페이지를 버퍼링 한다는 것이 무슨 말일까...
 - 데이터 블록을 디스크에 쓰기 연산을 할 때 중간에 누가 바꾸면 안되겠지? 
-	- latch 혹은 semaphore를 사요한다. 
+	- latch 혹은 semaphore를 사용한다. 
 - what is latch?
 	- 운영체제가 지원하는 기능으로서 동기화 문제에 쓰인다.
 	- 짧은 시간 소유할 수 있게 한다. 
-- 구현
+- 버퍼 구현
 	- 메모리를 잡아서 쓰기
 		- 공간 낭비에 대해서 취악하다 
 		- 실시간으로 유연하게 버퍼를 잡는 것이 불가능하다 (os가 현재 시스템의 요구 사항에 따라  )
@@ -147,7 +149,7 @@ buffer는 왜 있는 것일까?
 		- 해결 : 블락을 swap 영역에 output하지 말고 그냥 디스크에 바로 output하자
 - slotted page Structure
 	- 가변길이 레코드를 지원한다. 
-	- header page다음에 정해진 수의 slot이 나온다. 
+	- page header다음에 정해진 수의 slot이 나온다. 
 		- slot은 그 페이지에 저장되는 레코드의 주소를 가진다. 
 	- Header : id, 소유자, 여부공간,,,,등등의 메타정보 
 	- 레코드 : 사진에서 보는 것 같이 끝에서부터 저장이 된다. (메모리 heap같은 느낌)
@@ -167,5 +169,5 @@ buffer는 왜 있는 것일까?
 ![[Pasted image 20240417223100.png]]
 - Steal 하는 방식에서 fail이 발생하면 undo 작업을 해줘야한다. (commit 전이니까)
 - Not Force는 Redo(로그 레코드의 값을 읽어서...!, Wal을 지키기 때문에 log가 있다. )
-- Not stal의 문제점은 buffer가 항상 꽉찰 수 있다. 왜냐하면 반영을 안 시켰기 떄문이다. 
+- Not steal의 문제점은 buffer가 항상 꽉찰 수 있다. 왜냐하면 반영을 안 시켰기 떄문이다. 
 - force는 커밋시점에 다 써버리니까 건들일 필요가 없다. =>redo, undo가 필요없음

@@ -37,7 +37,11 @@ locking과 unlocking이 감싸는 형태인데 이는 well-formed schedule이라
 - Rigorous Two-phasing Locking
 	- stric 보다 더 빡센거다 트랜잭션이 **모든 잠금**을 커밋하거나 중단할 때까지 유지해야한다. (write 뿐만아니라 read에 대해서도)
 
+> 2PL 이 생성하지 못하는 conflict serializable이 존재한다. 
+
 ### Lock Conversions
+
+> 데이터에 대한 록을 요구할 때 동일 데이터에 대한 록을 기존에 할당 받았다면 기존 록에 대한 모드만 변환된다. (새로 가져오는 것이 아니라)
 
 - First phase(잠금 획득 단계)
 	- 트랜잭션이 데이터를 읽은 후에 수정해야 할 필요가 생겼을 때 공유 잠금을 독점 잠금으로 변환할 수 있다. (upgrade)
@@ -69,6 +73,8 @@ else begin
   read(D);  
 end;
 ```
+x록을 가지고 있는 트랜잭션만 없다면 s록을 획득하고 읽는다. 
+
 
 write(D)
 ```
@@ -88,6 +94,8 @@ end;
 ```
 - lock manager는 내부적으로 해쉬 테이블을 이용해서 록들을 관리한다. 
 ![[Pasted image 20240322125029.png]]
+왼쪽 작은 네모 박스는 해쉬 버킷을 의미한다. i7과 i23은 동일한 해쉬 값을 가지고 있는 것이다. 
+
 T1이 가지고 있는 lock은 s락이다. 
 T2가 요구하는 것은 쓰기 모드여야한다. 
 
@@ -110,15 +118,20 @@ starvation : 한 놈만 계속 victim이 되면 기아 상태가 된다.
 	- 필요 없는 데이터 항목에 대한 록을 그래프 기반 규약상의 이유로 획득하여야 한다는 것이다. (부분순서가 있기 때문에)
 	- 회복 불가능한 스케줄을 생성하기도 한다. 회복가능은 commit과 관련이 있다. 
 
+>그래프 기반 규약은 index와 같은 특정 데이터 영역에서만 사용이 된다. 
+
+
+
 ![[Pasted image 20240326150806.png]]
+G를 획득하기 위해 E가 꼭 필요한 것은 아니지만 G와 E가 다 필요하다면 E를 획득하고 G를 잡아야한다. 해제하는 것은 순서가 없다. 
+
 s락 왜 없어?
 공유할 필요가 없다...?
-
 
 #### Tree-based Protocol
 - 규약
 	- 록 해제는 제약 없이 가능하다. 해제 후 다시 잡을 수도 있다. 
-	- 한번 락을 획득하고 해제한 데이터 항목에 대해서는 다시 록을 잡을 수 없다. (이미 떠나간 사람 못 잡는다. )
+	- 한번 락을 획득하고 해제한 데이터 항목에 대해서는 다시 록을 잡을 수 없다.
 - 2PL과 차이점
 	- 록을 해제 한 다음에 록을 획득할 수가 있다는 
 
@@ -128,7 +141,7 @@ s락 왜 없어?
 
 ![[Pasted image 20240329120742.png]]
 다중 단위 계층 예제 
-DB - Relation - Page - Record
+DB - Relation(file-물리적인 측면에서) - Page - Record
 - lock을 걸었다면 그 노드에 자식 노드들도 같은 락이 걸리게 된다. 
 
 #### Intention Lock Models
@@ -146,6 +159,9 @@ DB - Relation - Page - Record
 	- 그래서 IS와 IX가 호환이 되는 것이다. 근데 IX에서 X가 나타나버리면 s,x는 호환이 될 수 없기 때문에 이런 일은 발생할 수가 없다. 
 - 상위 노드에서 SIX 록을 가지고 하위 노드에서 SIX 록을 요구하는 것은 올바른 방식이 아니다. (상위 노드에서 S 모드 록을 가지고 있는데 하위 노드에 중복하여 S 모드 록을 요구하므로)
 - 록을 획득 하는 것은 root에서 leaf로 가지만 해제하는 것은 leaf에서 root로 간다. 
+- 임의 노드에 SIX 록을 가지고 있으면, 하위 노드에 대하여는 IX 또는 X 록을 획득할 수 있다
+
+>동일한 노드에서 락을 요구하는 것인지 아니면 하위노드에 락을 요구하는 것인지에 따라 다르다. 
 
 # 2.3 Deadlock
 
@@ -164,7 +180,7 @@ DB - Relation - Page - Record
 	- wait-die (노인 공경)
 		- 비선점이다. 
 		- young한 얘가 old가 가지고 있는 자원을 wait하는 중이다 하면 rollback 시켜버린다. 
-		- 죽은 얘의 time stamp는 맨처음의 실행될 때의 timestamp를가지고 있어야한다. 
+		- 죽은 얘의 time stamp는 맨 처음의 실행될 때의 timestamp를가지고 있어야한다. 
 	- wond-wait
 		- 선점한다. 
 		- old가 younger를 rollback 시키게 강제한다. 그러나 young이 wait할 수도 있다. 그래서 wait-die보다는 rollback이 덜 일어날 수 있다. 
@@ -181,9 +197,9 @@ DB - Relation - Page - Record
 ex) Delete하고 Read하게 되면 문제가 발생한다. 
 -> S-lock을 걸고 읽은 후에 삭제해야 한다. (당연히 읽기부터 먼저 해라~ 라는 이야기다)
 
-- delete는 X-lock이 필요하다
+- delete는 ==X-lock==이 필요하다
 	- 기존에 그 자원에 대해서 s-lock이 있으면 안된다~
-- insert도 x-lock이 필요하다 
+- insert도 ==x-lock==이 필요하다 
 
 **팬텀**현상
 - Insert나 delete 때문에 발생하는 현상이다. 
@@ -236,7 +252,7 @@ B+트리는 아래의 데이터들도 연결해 놓는데 이러면 장점이 �
 #### Index + 2PL
 - 인덱스는 트리 구조를 가질 수 있는데 실제 데이터의 인덱스는 리프 노드에 있고 비리프 노드는 리프 노드로의 포인터를 포함한다. 
 - 조회(look up)을 수행하는 트랜잭션은 s-mode로 접근하는 모든 비리프/리프 노드를 잠가야한다. 
-- 관계R(테이블)에서 삽입, 갱신, 삭제하는 트랜잭션 T는 삽입/갱신/삭제에 영향을 받는 모든 비리프/리프 노드에 대해 독점 잠금(x-lock인듯?)을 얻어야한다.
+- 관계R(테이블)에서 삽입, 갱신, 삭제하는 트랜잭션 T는 삽입/갱신/삭제에 ==영향을 받는 모든 비리프/리프 노드에 대해 독점 잠금==(x-lock인듯?)을 얻어야한다.
 - 팬텀이 절대 발생하지 않도록한다.트랜잭션이 인덱스를 통해 데이터에 접근할 때, 그 인덱스 구조상의 모든 관련 노드를 잠금으로써 다른 트랜잭션이 해다 노드들을 동시에 변경할 수 없게 한다. 
 
 but 성능이 너무 떨어진다. 그래서 그래프 기반 록킹 규약을 사용한다. (색인 구조가) 동시성 저하가 너무 일어나니까
@@ -284,8 +300,8 @@ but 성능이 너무 떨어진다. 그래서 그래프 기반 록킹 규약을 �
 SQL 시스템은 총 4가지 실행 방식을 지원한다. 
 - Serializable (얘만 직렬 실행 가능이다. )
 - repeatable read : cascading rollback을 막겠다. - index locking이 필요가 없다. 
-- read committed : x-lock은 끝까지 들고있어야한다. read-lock은 풀 수가 있다. (Degree-two consistency랑 같다. )
-- read uncommitted : uncommitted 된 데이터도 읽을 수가 있다. 그래서 읽기 연산에서 그냥 lock을 잡지 않는다. 
+- read committed : x-lock은 끝까지 들고있어야한다. read-lock은 풀 수가 있다. (Degree-two consistency랑 같다. ) 읽기 연산에 대해서 lock을 잡는다. 
+- read uncommitted : uncommitted 된 데이터도 읽을 수가 있다. 그래서 읽기 연산에서 그냥 lock을 잡지 않는다. 그래서 타 트랜잭션이 overwrite하는 것만 막는 것이다. 
 
 ![[Pasted image 20240421200944.png]]
 - read uncommitted에서도 쓰기 록은 트랜잭션 마지막까지 들고 있다. 
