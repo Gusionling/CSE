@@ -1,0 +1,25 @@
+Keyword,Definition
+Host,"The HTTP host header is a request header that specifies the domain to which a client wants to connect. This header is required because it is fairly common for servers to host websites and
+applications at the same IP address. They don't always know where to send the request, though."
+HTTP,"The Hypertext Transfer Protocol (HTTP) is an application layer protocol in the Internet protocol suite model for distributed, collaborative, hypermedia information systems."
+Port,"In computer networking, a port is a communication endpoint. At the software level, within an operating system, a port is a logical construct that identifies a specific process or a type of network service."
+Header,"In information technology, header refers to supplemental data placed at the beginning of a block of data being stored or transmitted. In data transmission, the data following the header is sometimes called the payload or body."
+Encryption,"In cryptography, encryption is the process of encoding information. This process converts the original representation of the information, known as plaintext, into an alternative form known as ciphertext."
+Framing,"In the context of a web browser, a frame is a part of a web page or browser window which displays content independent of its container, with the ability to load content independently."
+GET common method,The GET method requests that the target resource transfer a representation of its state. GET requests should only retrieve data and should have no other effect.
+POST common method,The POST method requests that the target resource process the representation enclosed in the request according to the semantics of the target resource.
+URL,"A Uniform Resource Locator (URL), colloquially termed a web address, is a reference to a web resource that specifies its location on a computer network and a mechanism for retrieving it. A URL is a specific type of Uniform Resource Identifier (URI), although many people use the two terms interchangeably."
+Status Code,"Status codes are issued by a server in response to a client's request made to the server. It includes codes from IETF Request for Comments (RFCs), other specifications, and some additional codes used in some common applications of the HTTP"
+Caching,"the data stored in a cache might be the result of an earlier computation or a copy of data stored elsewhere. A cache hit occurs when the requested data can be found in a cache, while a cache miss occurs when it cannot."
+Content type,The Content-Type representation header is used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+Content-Encoding,"The Content-Encoding representation header lists any encodings that have been applied to the representation (message payload), and in what order."
+HTTP Authentication,HTTP provides a general framework for access control and authentication.
+Cookies,The Cookie HTTP request header contains stored HTTP cookies associated with the server
+Session,Provides a way to identify a user across more than one page request or visit to a Web site and to store information about that user.
+WSGI,a simple calling convention for web servers to forward requests to web applications or frameworks written in the Python programming language.
+HTTP proxy,"In computer networking, a proxy server is a server application that acts as an intermediary between a client requesting a resource and the server providing that resource."
+Gunicorn,"The Gunicorn ""Green Unicorn"" (pronounced jee-unicorn or gun-i-corn) is a Python Web Server Gateway Interface (WSGI) HTTP server. It is a pre-fork worker model, ported from Ruby's Unicorn project."
+REST,"Representational state transfer (REST) is a software architectural style that was created to guide the design and development of the architecture for the World Wide Web. REST defines a set of constraints for how the architecture of an Internet-scale distributed hypermedia system, such as the Web, should behave."
+HTML,The HyperText Markup Language or HTML is the standard markup language for documents designed to be displayed in a web browser. It can be assisted by technologies such as Cascading Style Sheets (CSS) and scripting languages such as JavaScript.
+XML,"Extensible Markup Language (XML) is a markup language and file format for storing, transmitting, and reconstructing arbitrary data."
+WWW,"The World Wide Web (WWW), commonly known as the Web, is the world's dominant software platform. It is an information space where documents and other web resources can be accessed through the Internet using a web browser."
